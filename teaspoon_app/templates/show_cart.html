@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Cart</h1>
+<table class="table row" border="true">
+    <thead class="thead-dark">
+    <tr class="row">
+        <th class="col-3">Drink</th>
+        <th class="col-3">Quantity</th>
+        <th class="col-3">Price</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% if cart %}
+    {% for drink in cart %}
+    <tr class="row">
+        <td class="col-3">{{drink.name}}</td>
+        <td class="col-3">{{drink.quantity}}</td>
+        <td class="col-3">{{drink.price}}</td>
+    </tr>
+    {% endfor %}
+    {% endif %}
+    </tbody>
+</table>
+{% endblock content %}

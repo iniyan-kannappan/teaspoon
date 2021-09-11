@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container">
+<table class="table row" border="true">
+    <thead class="thead-dark">
+    <tr class="row">
+        <th class="col-3">Drink</th>
+        <th class="col-3">Description</th>
+        <th class="col-3">Price</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% if all_drinks %}
+    {% for drink in all_drinks %}
+    <tr class="row">
+        <td class="col-3"><a href="{% url 'drink_prep' drink.id %}">{{drink.name}}</a></td>
+        <td class="col-3">{{drink.description}}</td>
+        <td class="col-3">{{drink.price}}</td>
+    </tr>
+    {% endfor %}
+    {% endif %}
+    </tbody>
+    </table>
+    </div>
+    {% endblock content %}
