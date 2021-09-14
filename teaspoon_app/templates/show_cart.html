@@ -21,4 +21,15 @@
     {% endif %}
     </tbody>
 </table>
+
+{% if cart.count != 0 %}
+<form method="POST">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-primary col-2">Checkout</button>
+</form>
+{% else %}
+<br>
+<br>
+<h1>Cart is Empty</h1>
+{% endif %}
 {% endblock content %}

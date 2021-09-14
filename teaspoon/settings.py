@@ -27,6 +27,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'teaspoon_app',
+    'users_app',
+    'crispy_forms',
     'paypal.standard.ipn',
 ]
 
@@ -112,6 +114,9 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 STATICFILES_DIRS=[os.path.join(BASE_DIR,'static')]
+CRISPY_TEMPLATE_PACK='bootstrap4'
+LOGIN_REDIRECT_URL="menu"
+LOGIN_URL='login'
 PAYPAL_RECEIVER_EMAIL='iniyan.kannappan@gmail.com'
 PAYPAL_TEST=True
 
