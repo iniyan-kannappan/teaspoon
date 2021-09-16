@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from teaspoon_app.models import base_drink, topping, line_item
+from teaspoon_app.models import base_drink, topping, line_item, order
 from django.contrib.auth.decorators import login_required
 
 @login_required
@@ -9,20 +9,22 @@ def home(request):
 @login_required
 def menu(request):
     all_drinks=base_drink.objects.all()
-    cart_len=len(line_item.objects.all())
-    return render(request, 'menu.html', {'all_drinks':all_drinks,'c_len':cart_len})
+    cart = line_item.objects.filter(manage=request.user, order__isnull=True)
+    return render(request, 'menu.html', {'all_drinks':all_drinks,'cart':cart})
 
 @login_required
 def show_cart(request):
     if request.method == 'POST':
-        cart=line_item.objects.filter(manage=request.user)
+        # When user hits checkout button, control comes here
+        cart=line_item.objects.filter(manage=request.user,order__isnull=True)
+        order_item = order(manage=request.user)
+        order_item.save()
         for item in cart:
-            item.order_status=True
+            item.order=order_item
             item.save()
         return redirect('menu')
     else:
-        cart=line_item.objects.filter(manage=request.user)
-        cart_len=len(cart)
+        cart=line_item.objects.filter(manage=request.user, order__isnull=True)
         return render(request, 'show_cart.html', {"cart":cart})
 
 @login_required
@@ -31,9 +33,27 @@ def drink_prep(request, id):
         quantity = int(request.POST.get('quantity'))
         drink=base_drink.objects.get(pk=id)
         price=float(drink.price)*quantity
-        line_item_model=line_item(order_status=False,drink_id=drink,manage=request.user,name=drink.name,quantity=quantity,price=price)
+        line_item_model=line_item(drink_id=drink,manage=request.user,name=drink.name,quantity=quantity,price=price)
         line_item_model.save()
         return redirect('menu')
     else:
         drink=base_drink.objects.get(pk=id)
         return render(request, "drink_prep.html", {'drink':drink})
+
+@login_required
+def orders(request):
+    orders=order.objects.all()
+    return render(request, 'orders.html', {'orders':orders})
+
+@login_required
+def staff_cart(request, order_id):
+    order_obj=order.objects.get(pk=order_id)
+    drinks_in_order=line_item.objects.filter(order=order_obj)
+    return render(request, "staff_cart.html", {'drinks_in_order':drinks_in_order})
+
+@login_required
+def done(request, id):
+    drink=line_item.objects.get(pk=id)
+    drink.done=True
+    drink.save()
+    return redirect('menu')

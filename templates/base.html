@@ -31,6 +31,10 @@
             <a class="nav-item nav-link" href="{% url 'register' %}">Register</a>
             <a class="nav-item nav-link" href="{% url 'login' %}">Login</a>
             {% endif %}
+            {% if user.is_staff %}
+            <a class="nav-item nav-link" href="{% url 'orders' %}">Orders</a>
+            {% endif %}
+
 
     </nav>
 </head>

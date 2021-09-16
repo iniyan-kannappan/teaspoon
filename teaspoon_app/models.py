@@ -12,18 +12,26 @@ class base_drink(models.Model):
     name=models.CharField(max_length=100)
     description=models.CharField(max_length=200)
     price=models.DecimalField(null=True,decimal_places=2,max_digits=10)
-    # topping=models.ManyToManyField(topping)
 
     def __str__(self):
         return self.name
 
+class order(models.Model):
+    manage=models.ForeignKey(User, on_delete=models.CASCADE)
+    order_date=models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return str(self.id)+' | '+str(self.order_date)+' | '+str(self.manage)
+
 class line_item(models.Model):
-    order_status=models.BooleanField(default=False)
+    order=models.ForeignKey(order,on_delete=models.CASCADE,default=None, null=True)
     drink_id=models.ForeignKey(base_drink, on_delete=models.CASCADE)
     manage = models.ForeignKey(User, on_delete=models.CASCADE)
     name=models.CharField(max_length=100)
     quantity=models.IntegerField(null=True)
     price=models.DecimalField(null=True, decimal_places=2, max_digits=10)
+    done=models.BooleanField(default=False)
 
     def __str__(self):
-        return str(self.id)+" | "+str(self.quantity)+" | "+str(self.price)
+        return str(self.id)+' | '+str(self.order)+" | "+str(self.quantity)+" | "+str(self.price)
+
