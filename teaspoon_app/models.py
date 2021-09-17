@@ -27,6 +27,7 @@ class line_item(models.Model):
     order=models.ForeignKey(order,on_delete=models.CASCADE,default=None, null=True)
     drink_id=models.ForeignKey(base_drink, on_delete=models.CASCADE)
     manage = models.ForeignKey(User, on_delete=models.CASCADE)
+    toppings=models.ForeignKey(topping, on_delete=models.CASCADE, null=True)
     name=models.CharField(max_length=100)
     quantity=models.IntegerField(null=True)
     price=models.DecimalField(null=True, decimal_places=2, max_digits=10)

@@ -33,7 +33,19 @@ def drink_prep(request, id):
         quantity = int(request.POST.get('quantity'))
         drink=base_drink.objects.get(pk=id)
         price=float(drink.price)*quantity
-        line_item_model=line_item(drink_id=drink,manage=request.user,name=drink.name,quantity=quantity,price=price)
+        print(request.POST.get('honey'))
+        if request.POST.get('honey')=='on':
+            topping_id=2
+        elif request.POST.get('no')=='on':
+            topping_id=1
+        elif request.POST.get('double')=='on':
+            topping_id=3
+        elif request.POST.get('triple')=='on':
+            topping_id=4
+        else:
+            topping_id=2
+        topping_model=topping.objects.get(pk=topping_id)
+        line_item_model=line_item(drink_id=drink,manage=request.user,toppings=topping_model,name=drink.name,quantity=quantity,price=price)
         line_item_model.save()
         return redirect('menu')
     else:
