@@ -1,1 +1,1 @@
-web: gunicorn desolate-peak-30540.wsgi
+web: gunicorn teaspoon.wsgi
