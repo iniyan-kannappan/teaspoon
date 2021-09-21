@@ -9,6 +9,7 @@ class topping(models.Model):
         return self.name
 
 class base_drink(models.Model):
+    image=models.CharField(max_length=100)
     name=models.CharField(max_length=100)
     description=models.CharField(max_length=200)
     price=models.DecimalField(null=True,decimal_places=2,max_digits=10)
