@@ -26,7 +26,7 @@
             <a class="nav-item nav-link" href="{% url 'home' %}">Home</a>
             <a class="nav-item nav-link" href="{% url 'menu' %}">Menu</a>
             <a class="nav-item nav-link" href="{% url 'show_cart' %}">Cart | {{ cart.count }}</a>
-            <a class="nav-item nav-link" href="{% url 'logout' %}">Logout</a>
+            <a class="nav-item nav-link" href="{% url 'logout' %}">{{request.user}} | Logout</a>
             {% else %}
             <a class="nav-item nav-link" href="{% url 'register' %}">Register</a>
             <a class="nav-item nav-link" href="{% url 'login' %}">Login</a>

@@ -5,11 +5,11 @@
     <table class="table row" border="true">
         <thead class="thead-dark">
         <tr class="row">
-            <th class="col-3">Drink</th>
-            <th class="col-3">Quantity</th>
-            <th class="col-3">Price</th>
-            <th class="col-3">Done</th>
-            <th class="col-3">Topping</th>
+            <th class="col-2">Drink</th>
+            <th class="col-2">Quantity</th>
+            <th class="col-2">Price</th>
+            <th class="col-2">Done</th>
+            <th class="col-2">Topping</th>
 
         </tr>
         </thead>
@@ -18,11 +18,17 @@
         {% for drink in drinks_in_order %}
         {% if not drink.done %}
         <tr class="row">
-            <td class="col-3">{{drink.name}}</td>
-            <td class="col-3">{{drink.quantity}}</td>
-            <td class="col-3">{{drink.price}}</td>
-            <th class="col-3"><a href="{% url 'done' drink.id %}">Done</a></th>
-            <th class="col-3">{{drink.toppings}}</th>
+            <td class="col-2">{{drink.name}}</td>
+            <td class="col-2">{{drink.quantity}}</td>
+            <td class="col-2">{{drink.price}}</td>
+            <td class="col-2"><a href="{% url 'done' drink.id %}">Done</a></td>
+            <td class="col-2">
+            [
+            {% for topping in drink.toppings.all %}
+            {{topping.name}},
+            {% endfor %}
+            ]
+            </td>
 
         </tr>
         {% endif %}

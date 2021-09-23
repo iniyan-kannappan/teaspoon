@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from teaspoon_app.models import base_drink, topping, line_item, order, line_item_topping
+from teaspoon_app.models import base_drink, topping, line_item, order
 from django.contrib.auth.decorators import login_required
 
 @login_required
@@ -24,14 +24,9 @@ def show_cart(request):
             item.save()
         return redirect('menu')
     else:
-        toppings=line_item_topping.objects.get(pk=1)
-        toppings_lis=[]
-        # for topping in toppings.topping:
-        #     toppings_lis.append(topping.name)
         cart=line_item.objects.filter(manage=request.user, order__isnull=True)
-        for instance in cart:
-            print(instance.id)
-            toppings=line_item_topping.objects.filter(line_item=instance.id)
+        for item in cart:
+            print(item.id,item.toppings.all())
         return render(request, 'show_cart.html', {"cart":cart})
 
 @login_required
@@ -40,9 +35,6 @@ def drink_prep(request, id):
         quantity = int(request.POST.get('quantity'))
         drink=base_drink.objects.get(pk=id)
         price=float(drink.price)*quantity
-        print(request.POST.get('honey'))
-        print(request.POST.get('double'))
-        print(request.POST.get('triple'))
         topping_id=[]
         if request.POST.get('honey')=='on':
             topping_id.append(1)
@@ -54,9 +46,8 @@ def drink_prep(request, id):
         line_item_model = line_item(drink_id=drink, manage=request.user, name=drink.name, quantity=quantity, price=price)
         line_item_model.save()
         for id in topping_id:
-            topping_obj=topping.objects.get(pk=id)
-            topping_model=line_item_topping(line_item=line_item_model, topping=topping_obj)
-            topping_model.save()
+            _topping=topping.objects.get(pk=id)
+            line_item_model.toppings.add(_topping)
         # line_item_model=line_item(drink_id=drink,manage=request.user,toppings=topping_model,name=drink.name,quantity=quantity,price=price)
         return redirect('menu')
     else:
@@ -79,4 +70,4 @@ def done(request, id):
     drink=line_item.objects.get(pk=id)
     drink.done=True
     drink.save()
-    return redirect('menu')
+    return redirect('staff_cart/',id)
