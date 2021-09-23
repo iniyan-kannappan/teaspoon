@@ -7,6 +7,7 @@
         <th class="col-3">Drink</th>
         <th class="col-3">Quantity</th>
         <th class="col-3">Price</th>
+        <th class="col-3">Toppings</th>
     </tr>
     </thead>
     <tbody>
@@ -16,6 +17,7 @@
         <td class="col-3">{{drink.name}}</td>
         <td class="col-3">{{drink.quantity}}</td>
         <td class="col-3">{{drink.price}}</td>
+        <td class="col-3">{{toppings.objects.filter(line_item=drink.id)}}</td>
     </tr>
     {% endfor %}
     {% endif %}

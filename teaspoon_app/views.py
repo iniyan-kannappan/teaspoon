@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from teaspoon_app.models import base_drink, topping, line_item, order
+from teaspoon_app.models import base_drink, topping, line_item, order, line_item_topping
 from django.contrib.auth.decorators import login_required
 
 @login_required
@@ -24,7 +24,14 @@ def show_cart(request):
             item.save()
         return redirect('menu')
     else:
+        toppings=line_item_topping.objects.get(pk=1)
+        toppings_lis=[]
+        # for topping in toppings.topping:
+        #     toppings_lis.append(topping.name)
         cart=line_item.objects.filter(manage=request.user, order__isnull=True)
+        for instance in cart:
+            print(instance.id)
+            toppings=line_item_topping.objects.filter(line_item=instance.id)
         return render(request, 'show_cart.html', {"cart":cart})
 
 @login_required
@@ -34,19 +41,23 @@ def drink_prep(request, id):
         drink=base_drink.objects.get(pk=id)
         price=float(drink.price)*quantity
         print(request.POST.get('honey'))
+        print(request.POST.get('double'))
+        print(request.POST.get('triple'))
+        topping_id=[]
         if request.POST.get('honey')=='on':
-            topping_id=2
-        elif request.POST.get('no')=='on':
-            topping_id=1
-        elif request.POST.get('double')=='on':
-            topping_id=3
-        elif request.POST.get('triple')=='on':
-            topping_id=4
-        else:
-            topping_id=2
-        topping_model=topping.objects.get(pk=topping_id)
-        line_item_model=line_item(drink_id=drink,manage=request.user,toppings=topping_model,name=drink.name,quantity=quantity,price=price)
+            topping_id.append(1)
+        if request.POST.get('double')=='on':
+            topping_id.append(2)
+        if request.POST.get('triple')=='on':
+            topping_id.append(3)
+        print(topping_id)
+        line_item_model = line_item(drink_id=drink, manage=request.user, name=drink.name, quantity=quantity, price=price)
         line_item_model.save()
+        for id in topping_id:
+            topping_obj=topping.objects.get(pk=id)
+            topping_model=line_item_topping(line_item=line_item_model, topping=topping_obj)
+            topping_model.save()
+        # line_item_model=line_item(drink_id=drink,manage=request.user,toppings=topping_model,name=drink.name,quantity=quantity,price=price)
         return redirect('menu')
     else:
         drink=base_drink.objects.get(pk=id)
