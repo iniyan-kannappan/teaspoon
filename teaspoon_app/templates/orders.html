@@ -4,7 +4,11 @@
 <div class="container">
     </br>
     {% for order in orders %}
-    <a href="{% url 'staff_cart' order.id %}">Order {{order.id}}</a>
+    {% if not order.pending_or_dispatched %}
+    <a href="{% url 'staff_cart' order.id %}">Order {{order.id}} - Pending</a>
+    {% else %}
+    <a href="{% url 'staff_cart' order.id %}">Order {{order.id}} - Dispatched</a>
+    {% endif %}
     <br>
     {% endfor %}
 </div>

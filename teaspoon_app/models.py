@@ -20,6 +20,7 @@ class base_drink(models.Model):
 class order(models.Model):
     manage=models.ForeignKey(User, on_delete=models.CASCADE)
     order_date=models.DateTimeField(auto_now=True)
+    pending_or_dispatched=models.BooleanField(default=False)
 
     def __str__(self):
         return str(self.id)+' | '+str(self.order_date)+' | '+str(self.manage)
@@ -36,10 +37,3 @@ class line_item(models.Model):
 
     def __str__(self):
         return str(self.id)+' | '+str(self.order)+" | "+str(self.quantity)+" | "+str(self.price)
-
-# class line_item_topping(models.Model):
-#     line_item=models.ForeignKey(line_item, on_delete=models.CASCADE)
-#     topping=models.ForeignKey(topping, on_delete=models.CASCADE)
-#
-#     def __str__(self):
-#         return str(self.topping.name)

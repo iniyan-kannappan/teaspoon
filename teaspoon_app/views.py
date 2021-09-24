@@ -57,6 +57,18 @@ def drink_prep(request, id):
 @login_required
 def orders(request):
     orders=order.objects.all()
+    var=True
+    for order_obj in orders:
+        drinks=line_item.objects.filter(order=order_obj.id)
+        for drink in drinks:
+            if not drink.done:
+                var=False
+                break
+        if not var:
+            break
+        if var:
+            order_obj.pending_or_dispatched=True
+            order_obj.save()
     return render(request, 'orders.html', {'orders':orders})
 
 @login_required
@@ -66,8 +78,9 @@ def staff_cart(request, order_id):
     return render(request, "staff_cart.html", {'drinks_in_order':drinks_in_order})
 
 @login_required
-def done(request, id):
+def line_item_done(request, id):
     drink=line_item.objects.get(pk=id)
+    order_id=drink.order.id
     drink.done=True
     drink.save()
-    return redirect('staff_cart/',id)
+    return redirect('staff_cart',order_id=order_id)
