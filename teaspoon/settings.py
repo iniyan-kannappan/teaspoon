@@ -30,6 +30,7 @@ INSTALLED_APPS = [
     'users_app',
     'crispy_forms',
     'paypal.standard.ipn',
+    'storages',
 ]
 
 MIDDLEWARE = [
@@ -123,8 +124,20 @@ LOGIN_REDIRECT_URL="menu"
 LOGIN_URL='login'
 PAYPAL_RECEIVER_EMAIL='iniyan.kannappan@gmail.com'
 PAYPAL_TEST=True
+MEDIA_URL = '/mediafiles/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'mediafiles')
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+
+AWS_S3_ACCESS_KEY_ID = 'AKIAVN2SGXUICP3N32UC'
+
+AWS_S3_SECRET_ACCESS_KEY = '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'
+
+AWS_STORAGE_BUCKET_NAME = 'teaspoonapp'
+
+AWS_QUERYSTRING_AUTH = False
